@@ -23,6 +23,11 @@ const jobSchema=new mongoose.Schema(
             type:Number,
             required:true
         },
+        experienceLevel:
+        {
+            type:Number,
+            required:true
+        },
         location:
         {
             type:String,
@@ -30,7 +35,7 @@ const jobSchema=new mongoose.Schema(
         },
         jobType:
         {
-            tupe:String,
+            type:String,
             required:true
         },
         position:
@@ -62,4 +67,6 @@ const jobSchema=new mongoose.Schema(
     },{timestamps:true}
 );
 
-export default Job=mongoose.model('Job',jobSchema);
+const Job=mongoose.model('Job',jobSchema);
+
+export default Job;
