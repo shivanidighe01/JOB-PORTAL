@@ -103,7 +103,7 @@ export const getAdminJobs = async(req,res)=>
         }
 
         return res.status(200).json({
-            job,
+            jobs,
             success:true
         });
 
