@@ -3,6 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
+import { Link } from "react-router-dom";
 import React from "react";
 import { Button } from "../ui/button.jsx";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
@@ -29,8 +30,10 @@ const Navbar = () => {
                 !user 
                 ? 
                 <div className="flex gap-2 item-center">
-                    <Button variant="outline">Login</Button>
-                    <Button className="bg-[#835fc0] hover:bg-[#5428a0]">Signup</Button>
+                    <Link to="/login"><Button variant="outline">Login</Button></Link>
+                    <Link to="/signup"><Button className="bg-[#835fc0] hover:bg-[#5428a0]">Signup</Button></Link>
+                    
+                    
                 </div>
                 : 
                 <Popover>

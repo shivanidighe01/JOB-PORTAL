@@ -74,3 +74,10 @@
       @apply bg-background text-foreground;
     }
   }
+
+  input[type="radio"] {
+    appearance: radio; /* Ensures it uses the default radio button style */
+    -webkit-appearance: radio; /* For WebKit-based browsers like Safari */
+    -moz-appearance: radio; /* For Firefox */
+  }
+  
