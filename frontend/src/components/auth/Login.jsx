@@ -4,8 +4,10 @@ import { Label } from "../ui/label.jsx";
 import { Input } from "../ui/input.jsx";
 import { RadioGroup } from "../ui/radio-group.jsx";
 import { Button } from "../ui/button.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import axios from "axios";
+import { USER_API_END_POINT } from "@/utils/constant.js";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -16,6 +18,7 @@ const Login = () => {
     role: "",
     // file:""
   });
+  const navigate=useNavigate();
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: [e.target.value] });
     // console.log(setInput());
@@ -42,7 +45,7 @@ const Login = () => {
 
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "something went wrong");
     }
   };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import Navbar from "../shared/Navbar.jsx";
 import { Label } from "../ui/label.jsx";
 import { Input } from "../ui/input.jsx";
@@ -54,7 +55,7 @@ const signup = () => {
         },
         withCredentials:true
       });
-
+        console.log("response",res);
       if(res.data.success)
       {
         navigate("/login");
@@ -63,7 +64,7 @@ const signup = () => {
 
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong",res.data.message);
+      toast.error(error.response?.data?.message || "something went wrong");
     }
   };
 

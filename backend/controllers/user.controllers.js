@@ -5,6 +5,7 @@ export const register= async(req,res)=>
 {
     try {
         const {fullname,email,phoneNumber,password,role}=req.body;
+        // console.log(fullname,email,phoneNumber,password,role);
         if(!fullname || !email || !phoneNumber || !password || !role)
         {
             return res.status(400).json({
@@ -41,7 +42,8 @@ export const register= async(req,res)=>
 
 export const login= async(req,res)=>{
     try {
-        const {email,password,role}=req.body;
+        const { email, password: rawPassword, role } = req.body;
+        const password = Array.isArray(rawPassword) ? rawPassword[0] : rawPassword;
     
         if( !email || !password || !role)
         {
@@ -59,9 +61,16 @@ export const login= async(req,res)=>{
                 success:false
             });
         }
+
+        // Log the fetched user and password
+        // console.log("User fetched:", user);
+        // console.log("Password from request:", password, "Type:", typeof password);
+        // console.log("Hashed password from DB:", user.password, "Type:", typeof user.password);
+
         //check password
         const isPassMatch=await bcrypt.compare(password,user.password);
-
+       
+        
         if(!isPassMatch)
         {
             return res.status(400).json({
@@ -119,6 +128,7 @@ export const updateProfile= async(req,res)=>
 {
     try {
         const {fullname,email,phoneNumber,bio,skills}=req.body;
+      
         const file=req.file;
         // if(!fullname || !email || !phoneNumber || !bio || !skills)
         // {
