@@ -11,6 +11,10 @@ import { USER_API_END_POINT } from "@/utils/constant.js";
 import "../../../src/indexx.css";
 import { Toaster } from "../ui/sonner.jsx";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/authSlice.js";
+import { Loader2 } from "lucide-react";
+
 
 const signup = () => {
   const [input, setInput] = useState({
@@ -21,14 +25,18 @@ const signup = () => {
     role: "",
     file: "",
   });
+
+
   const navigate=useNavigate();
+  const {loading,user}=useSelector(store=>store.auth);
+  const dispatch=useDispatch();
+
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: [e.target.value] });
-    // console.log(setInput());
   };
   const changeRoleHandler = (e) => {
     setInput({ ...input, role: e.target.value});
-    // console.log(setInput());
   };
   const changeFileHandler = (e) => {
     setInput({ ...input, file: e.target.files[0] });
@@ -49,13 +57,15 @@ const signup = () => {
     }
 
     try {
+
+      dispatch(setLoading(true));
       const res=await axios.post(`${USER_API_END_POINT}/register`,formData,{
         headers:{
           "Content-Type":"multipart/form-data"
         },
         withCredentials:true
       });
-        console.log("response",res);
+        // console.log("response",res);
       if(res.data.success)
       {
         navigate("/login");
@@ -65,6 +75,10 @@ const signup = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "something went wrong");
+    }
+    finally
+    {
+      dispatch(setLoading(true));
     }
   };
 
@@ -160,9 +174,18 @@ const signup = () => {
               onChange={changeFileHandler}
             ></Input>
           </div>
-          <Button type="submit" className="w-full my-4">
-            Signup
-          </Button>
+          {
+          loading ? (
+            <Button className="w-full my-4">
+              {" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full my-4">
+              Sign up
+            </Button>
+          )
+          }
           <span className="text-sm">
             Already have an account?
             <Link to="/login" className="text-blue-600">
