@@ -36,8 +36,8 @@ const FilterCard = () => {
             <RadioGroup>
                 {
                     fitlerData.map((data, index) => (
-                        <div>
-                            <h1 className='font-bold text-lg'>{data.fitlerType}</h1>
+                        <div key={data}>
+                            <h1 className='font-bold text-lg'>{data.fitlerType}</h1> 
                             {
                                 data.array.map((item, idx) => {
                                     const itemId = `id${index}-${idx}`

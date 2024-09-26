@@ -1,6 +1,8 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import getDataUri from '../utils/datauri.js';
+import cloudinary from '../utils/cloudinary.js';
 export const register= async(req,res)=>
 {
     try {
@@ -13,6 +15,19 @@ export const register= async(req,res)=>
                 success:false
             });
         };
+
+        const file=req.file;
+        const fileuri=getDataUri(file);
+        const cloudResponse=await cloudinary.uploader.upload(fileuri.content);
+        // console.log(cloudResponse);
+
+        const uploadedFileUrl = cloudResponse.secure_url; // Get the secure URL
+        // user.profilePhoto = uploadedFileUrl; // Save it in the user model
+        // console.log(uploadedFileUrl);
+
+
+
+
         const user=await User.findOne({email});
         if(user)
         {
@@ -28,9 +43,12 @@ export const register= async(req,res)=>
             email,
             phoneNumber,
             password: hashPassword,
-            role
+            role,
+            profile:{
+                profilePhoto:uploadedFileUrl
+            }
         });
-
+        // await User.save();
         return res.status(200).json({
             message:"Account created",
             success:true
@@ -38,6 +56,8 @@ export const register= async(req,res)=>
     } catch (error) {
         console.log(error);
     }
+
+    
 }
 
 export const login= async(req,res)=>{
@@ -128,18 +148,28 @@ export const updateProfile= async(req,res)=>
 {
     try {
         const {fullname,email,phoneNumber,bio,skills}=req.body;
-      
+    //   console.log(fullname,email,phoneNumber,bio,skills);
         const file=req.file;
-        // if(!fullname || !email || !phoneNumber || !bio || !skills)
-        // {
-        //     return res.status(400).json({
-        //         message:"something is missing",
-        //         success:false
-        //     });
-        // };
-
-
+        const fileuri=getDataUri(file);
+       
         //cloudinary setup for file storage
+
+        const cloudResponse=await cloudinary.uploader.upload(fileuri.content);
+        
+
+        if(!fullname || !email || !phoneNumber || !bio || !skills)
+        {
+            return res.status(400).json({
+                message:"something is missing",
+                success:false
+            });
+        };
+
+
+        
+
+
+
 
         let skillArray;
         if(skills)
@@ -147,9 +177,11 @@ export const updateProfile= async(req,res)=>
            skillArray=skills.split(",");
         }
        
-        const userId=req._id;
+        // const userId=req.user_id;
+        const userId = req.user.userId;
+        // console.log("userId",userId);
 
-        let user=await User.findOne({userId});
+        let user=await User.findById(userId)
         if(!user)
         {
             return res.status(400).json({
@@ -165,8 +197,13 @@ export const updateProfile= async(req,res)=>
         if(skills) user.profile.skills=skillArray;
         
         //resume add karana hai
+        if(cloudResponse)
+        {
+            user.profile.resume=cloudResponse.secure_url
+            user.profile.resumeOriginalName=file.originalname
+        }
 
-        await User.save;
+        await user.save();
 
         user={
             _id:user._id,
@@ -187,3 +224,10 @@ export const updateProfile= async(req,res)=>
         console.log(error);
     }
 }
+
+
+
+
+
+
+
