@@ -12,6 +12,7 @@ export const postJob= async(req,res)=>{
                 success:false
             });
         };
+        
         const job = await Job.create({
             title,
             description,
@@ -95,7 +96,10 @@ export const getAdminJobs = async(req,res)=>
 {
     try {
         const adminId=req.id;
-        const jobs=await Job.find({created_by:adminId});
+        const jobs=await Job.find({created_by:adminId}).populate({
+            path:'company',
+            createdAt:-1
+        });
         if(!jobs)
         {
             return res.status(404).json({
