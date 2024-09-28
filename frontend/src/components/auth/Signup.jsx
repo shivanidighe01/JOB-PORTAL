@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Navbar from "../shared/Navbar.jsx";
 import { Label } from "../ui/label.jsx";
@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/authSlice.js";
 import { Loader2 } from "lucide-react";
-
+// import user
 
 const signup = () => {
   const [input, setInput] = useState({
@@ -81,7 +81,11 @@ const signup = () => {
       dispatch(setLoading(true));
     }
   };
-
+  useEffect(()=>{
+    if(user){
+        navigate("/");
+    }
+},[])
   return (
     <div>
       <Navbar></Navbar>
